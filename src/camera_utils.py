@@ -15,8 +15,8 @@ def compute_focal_length_in_mm(camera: Camera) -> np.ndarray:
     """
 
     # Note(Ayush): Solution provided by project leader.
-    pixel_to_mm_x = camera.sensor_size_x_mm / camera.image_size_x_px
-    pixel_to_mm_y = camera.sensor_size_y_mm / camera.image_size_y_px
+    pixel_to_mm_x = camera.sensor_size_x_mm / camera.image_size_x
+    pixel_to_mm_y = camera.sensor_size_y_mm / camera.image_size_y
 
     return np.array([camera.fx * pixel_to_mm_x, camera.fy * pixel_to_mm_y])
 
@@ -58,7 +58,23 @@ def compute_image_footprint_on_surface(camera: Camera, distance_from_surface: fl
     Returns:
         np.ndarray: [footprint_x, footprint_y] in meters.
     """
-    raise NotImplementedError()
+
+    # Convert distance to mm
+    distance_mm = distance_from_surface * 1000
+
+    #Small Triangle: Base: sensor_size_x_mm Height: focal length
+    #Big Triangle: Base: footprint_x_mm Height: distance_mm
+    # triangles are similar, the ratios of their corresponding sides are equal
+    # (sensor_size_x_mm) / focal length = (footprint_x_mm) / (distance_mm)
+    focal_length_x = compute_focal_length_in_mm(camera)[0]  #convert focal length into mm
+    focal_length_y = compute_focal_length_in_mm(camera)[1]
+
+    # Compute the image footprint in mm
+    footprint_x = (camera.sensor_size_x_mm * distance_mm) / focal_length_x
+    footprint_y = (camera.sensor_size_y_mm * distance_mm) / focal_length_y
+
+
+    return np.array([footprint_x/1000, footprint_y/1000]) # convert back to meters
 
 def compute_ground_sampling_distance(camera: Camera, distance_from_surface: float) -> float:
     """Compute the ground sampling distance (GSD) at a given distance from the surface.
@@ -70,4 +86,6 @@ def compute_ground_sampling_distance(camera: Camera, distance_from_surface: floa
     Returns:
         float: the GSD in meters (smaller among x and y directions).
     """
-    raise NotImplementedError()
+
+    smallest_gsd = distance_from_surface/ min(camera.fx, camera.fy)
+    return smallest_gsd

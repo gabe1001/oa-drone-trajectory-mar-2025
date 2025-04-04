@@ -34,8 +34,22 @@ class Camera:
 class DatasetSpec:
     """
     Data model for specifications of an image dataset.
+    Attributes:
+        Overlap: the ratio (in 0 to 1) of scene shared between two consecutive images (Unitless).
+        Sidelap: the ratio (in 0 to 1) of scene shared between two images in adjacent rows (Unitless).
+        Height: above the ground (in meters).
+        Scan dimension X: the horizontal size of the rectangle to be scanned (in meters).
+        Scan dimension Y: the vertical size of the rectangle to be scanned (in meters).
+        Exposure Time: for each image (in milliseconds).
+
     """
-    pass
+    overlap: float
+    sidelap: float
+    height: float
+    scan_dimension_x: int
+    scan_dimension_y: int
+    exposure_time_ms: int
+    
 
 
 @dataclass
