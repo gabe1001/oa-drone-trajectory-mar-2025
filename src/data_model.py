@@ -36,7 +36,7 @@ class DatasetSpec:
     Data model for specifications of an image dataset.
     Attributes:
         Overlap: the ratio (in 0 to 1) of scene shared between two consecutive images (Unitless).
-        Sidelap: the ratio (in 0 to 1) of scene shared between two images in adjacent rows (Unitless).
+        Sidelap: ratio (in 0 to 1) of scene shared between two images in adjacent rows (Unitless).
         Height: above the ground (in meters).
         Scan dimension X: the horizontal size of the rectangle to be scanned (in meters).
         Scan dimension Y: the vertical size of the rectangle to be scanned (in meters).
@@ -49,7 +49,8 @@ class DatasetSpec:
     scan_dimension_x: int
     scan_dimension_y: int
     exposure_time_ms: int
-    
+    def __str__(self):
+        return f"Overlap {self.overlap}, Sidelap {self.sidelap}, Height {self.height}, Scan dimension X {self.scan_dimension_x}, Scan dimension Y {self.scan_dimension_y}, Exposure Time {self.exposure_time_ms}"
 
 
 @dataclass
