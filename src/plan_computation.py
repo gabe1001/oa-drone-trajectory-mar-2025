@@ -18,6 +18,8 @@ def compute_distance_between_images(camera: Camera, dataset_spec: DatasetSpec) -
         float: The distance between images in the horizontal direction.
         float: The distance between images in the vertical direction.
     """
+
+    
     raise NotImplementedError()
 
 
