@@ -56,5 +56,15 @@ class DatasetSpec:
 class Waypoint:
     """
     Waypoints are positions where the drone should fly to and capture a photo.
+    For Nadir scans (looking straight down), this position defines the
+    camera's location in the world coordinate system.
+
+    Attributes:
+        x: The x-coordinate of the waypoint (in meters).
+        y: The y-coordinate of the waypoint (in meters).
+        z: The z-coordinate (height) of the waypoint (in meters).
     """
-    pass
+    x: float
+    y: float
+    z: float
+    speed: float
