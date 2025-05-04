@@ -74,7 +74,7 @@ def compute_image_footprint_on_surface(camera: Camera, distance_from_surface: fl
     footprint_y = (camera.sensor_size_y_mm * distance_mm) / focal_length_y
 
 
-    return np.array([footprint_x/1000, footprint_y/1000]) # convert back to meters
+    return np.array([footprint_x/1000, footprint_y/1000]) # convert from millimeters to meters
 
 def compute_ground_sampling_distance(camera: Camera, distance_from_surface: float) -> float:
     """Compute the ground sampling distance (GSD) at a given distance from the surface.
