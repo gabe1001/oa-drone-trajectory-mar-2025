@@ -62,4 +62,50 @@ def generate_photo_plan_on_grid(camera: Camera, dataset_spec: DatasetSpec) -> T.
         List[Waypoint]: scan plan as a list of waypoints.
 
     """
-    raise NotImplementedError()
+    photo_plan: T.List[Waypoint] = []
+    scan_dim_x = dataset_spec.scan_dimension_x
+    scan_dim_y = dataset_spec.scan_dimension_y
+    height = dataset_spec.height
+
+    ideal_distance_x, ideal_distance_y = compute_distance_between_images(camera, dataset_spec)
+    capture_speed = compute_speed_during_photo_capture(camera, dataset_spec)
+
+    #Determine Number of Rows and Columns
+    # If dimension is zero, we need 1 photo in that dimension
+    num_cols = 1 if scan_dim_x == 0 else math.ceil(scan_dim_x / ideal_distance_x) + 1
+    num_rows = 1 if scan_dim_y == 0 else math.ceil(scan_dim_y / ideal_distance_y) + 1
+
+    # Handle cases where scan dimension is smaller than ideal distance -> still need 2 points minimum usually
+    num_intervals_x = 0 if scan_dim_x == 0 else math.ceil(scan_dim_x / ideal_distance_x)
+    num_cols = num_intervals_x + 1
+
+    num_intervals_y = 0 if scan_dim_y == 0 else math.ceil(scan_dim_y / ideal_distance_y)
+    num_rows = num_intervals_y + 1
+
+    actual_distance_x = 0.0
+    if num_cols > 1:
+        actual_distance_x = scan_dim_x / (num_cols - 1)
+
+    actual_distance_y = 0.0
+    if num_rows > 1:
+        actual_distance_y = scan_dim_y / (num_rows - 1)
+
+    # Generate Waypoints with Lawn Mower Pattern
+    for r in range(num_rows):
+        y_coord = r * actual_distance_y
+
+        # Determine direction based on row index
+        if r % 2 == 0:
+            # Even row: Left-to-Right
+            x_coords = [c * actual_distance_x for c in range(num_cols)]
+        else:
+            # Odd row: Right-to-Left
+            x_coords = [scan_dim_x - (c * actual_distance_x) for c in range(num_cols)]
+
+        # Create waypoints for the current row
+        for x_coord in x_coords:
+            z_coord = height # Constant height for all waypoints
+            waypoint = Waypoint(x=x_coord, y=y_coord, z=z_coord, speed=capture_speed)
+            photo_plan.append(waypoint)
+
+    return photo_plan
