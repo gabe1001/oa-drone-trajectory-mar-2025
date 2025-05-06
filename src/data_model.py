@@ -63,6 +63,8 @@ class Waypoint:
         x: The x-coordinate of the waypoint (in meters).
         y: The y-coordinate of the waypoint (in meters).
         z: The z-coordinate (height) of the waypoint (in meters).
+        speed: Maximum allowed drone speed (meters/second) 
+               during photo capture at this waypoint to prevent motion blur.
     """
     x: float
     y: float
